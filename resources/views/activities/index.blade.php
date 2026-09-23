@@ -2,7 +2,10 @@
 
 @section('content')
     <h1>Daftar Kegiatan</h1>
-
+    @if (session('success'))
+        <p class="success">{{ session('success') }}</p>
+    @endif
+    <a href="{{ route('activities.create') }}">Tambah Kegiatan</a>
     @forelse ($activities as $activity)
         <article>
             <h2>
