@@ -13,9 +13,11 @@ class Activity extends Model
         'category',
         'status',
     ];
-    protected function casts(): array{
+
+    protected function casts(): array
+    {
         return [
-            'activity_date'=> 'date',
+            'activity_date' => 'date',
         ];
     }
 }
