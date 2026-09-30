@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Activity extends Model
 {
@@ -10,8 +11,9 @@ class Activity extends Model
         'title',
         'description',
         'activity_date',
-        'category',
         'status',
+        'category_id',
+        'code'
     ];
 
     protected function casts(): array
@@ -19,5 +21,9 @@ class Activity extends Model
         return [
             'activity_date' => 'date',
         ];
+    }
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }
