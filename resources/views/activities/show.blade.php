@@ -13,6 +13,7 @@
     <p>Selesai: {{ $activity->end_at?->format('d M Y H:i') ?? '-' }}</p>
     <p>Lokasi: {{ $activity->location ?? '-' }}</p>
     <p>Kapasitas: {{ $activity->capacity ?? '-' }}</p>
+    <p>Pendaftar: {{ $activity->registered_count }} / {{ $activity->capacity ?? '-' }}</p>
     <p>Kode: {{ $activity->code }}</p>
     <p>Kategori: {{ $activity->category->name }}</p>
     <p>Status: {{ $activity->status }}</p>
@@ -23,6 +24,21 @@
     <form method="POST" action="{{ route('activities.complete', $activity) }}">
         @csrf
         <button type="submit">Selesaikan</button>
+    </form>
+    <h2>Daftar Peserta</h2>
+    <form method="POST" action="{{ route('registrations.store', $activity) }}">
+        @csrf
+        <label for="participant_name">Nama</label>
+        <input type="text" id="participant_name" name="participant_name" value="{{ old('participant_name') }}">
+        @error('participant_name')
+            <p class="error">{{ $message }}</p>
+        @enderror
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ old('email') }}">
+        @error('email')
+            <p class="error">{{ $message }}</p>
+        @enderror
+        <button type="submit">Daftar</button>
     </form>
     <a href="{{ route('activities.edit', $activity) }}">Ubah</a>
     <form method="POST" action="{{ route('activities.destroy', $activity) }}" onsubmit="return confirm('Hapus kegiatan ini?')">
