@@ -6,14 +6,18 @@
         <p class="success">{{ session('success') }}</p>
     @endif
     <a href="{{ route('activities.create') }}">Tambah Kegiatan</a>
+    <a href="{{ route('activities.trash') }}">Sampah</a>
     <form method="GET" action="{{ route('activities.index') }}">
+        <label for="search">Cari</label>
         <input
             type="text"
+            id="search"
             name="search"
             placeholder="Cari kode atau judul"
             value="{{ request('search') }}"
         >
-        <select name="category_id">
+        <label for="category_id">Kategori</label>
+        <select id="category_id" name="category_id">
             <option value="">Semua kategori</option>
             @foreach ($categories as $category)
                 <option
@@ -24,7 +28,8 @@
                 </option>
             @endforeach
         </select>
-        <select name="status">
+        <label for="status">Status</label>
+        <select id="status" name="status">
             <option value="">Semua status</option>
             @foreach (['draft', 'published', 'completed'] as $statusOption)
                 <option
@@ -35,7 +40,8 @@
                 </option>
             @endforeach
         </select>
-        <select name="sort">
+        <label for="sort">Urutkan</label>
+        <select id="sort" name="sort">
             <option value="terbaru" @selected(request('sort', 'terbaru') === 'terbaru')>Terbaru</option>
             <option value="terlama" @selected(request('sort') === 'terlama')>Terlama</option>
         </select>

@@ -18,6 +18,7 @@ class ActivityController extends Controller
     public function index(Request $request): View
     {
         $activities = Activity::query()
+            ->with('category')
             ->search($request->string('search')->trim()->toString())
             ->ofCategory($request->integer('category_id'))
             ->ofStatus($request->string('status')->toString())
@@ -98,7 +99,22 @@ class ActivityController extends Controller
         return redirect()->route('activities.show', $activity)
             ->with('success', 'Kegiatan berhasil diselesaikan.');
     }
-    
+    public function trash(): View
+    {
+        $activities = Activity::onlyTrashed()
+            ->with('category')
+            ->latest('deleted_at')
+            ->paginate(10);
+
+        return view('activities.trash', compact('activities'));
+    }
+    public function restore(Activity $activity): RedirectResponse
+    {
+        $activity->restore();
+
+        return redirect()->route('activities.index')
+            ->with('success', 'Kegiatan berhasil dipulihkan.');
+    }
     public function destroy(Activity $activity): RedirectResponse
     {
         $activity->delete();

@@ -7,7 +7,7 @@ use DomainException;
 
 class CategoryService{
     public function delete(Category $category): void{
-        if ($category->activities()->exists()) {
+        if ($category->activities()->withTrashed()->exists()) {
             throw new DomainException(
                 "Kategori {$category->name} tidak bisa dihapus karena masih dipakai oleh kegiatan."
             );
