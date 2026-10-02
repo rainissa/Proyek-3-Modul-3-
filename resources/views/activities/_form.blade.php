@@ -47,30 +47,50 @@
     @enderror
 </div>
 <div>
-    <label for="activity_date">Tanggal Kegiatan</label>
+    <label for="start_at">Waktu Mulai</label>
     <input
-        type="date"
-        id="activity_date"
-        name="activity_date"
-        value="{{ old('activity_date', isset($activity) ? $activity->activity_date->format('Y-m-d') : '') }}"
+        type="datetime-local"
+        id="start_at"
+        name="start_at"
+        value="{{ old('start_at', isset($activity) && $activity->start_at ? $activity->start_at->format('Y-m-d\TH:i') : '') }}"
     >
-    @error('activity_date')
+    @error('start_at')
         <p class="error">{{ $message }}</p>
     @enderror
 </div>
 <div>
-    <label for="status">Status</label>
-    <select name="status" id="status">
-        @foreach (['Planned', 'Ongoing', 'Done'] as $status)
-            <option
-                value="{{ $status }}"
-                @selected(old('status', $activity->status ?? 'Planned') === $status)
-            >
-                {{ $status }}
-            </option>
-        @endforeach
-    </select>
-    @error('status')
+    <label for="end_at">Waktu Selesai</label>
+    <input
+        type="datetime-local"
+        id="end_at"
+        name="end_at"
+        value="{{ old('end_at', isset($activity) && $activity->end_at ? $activity->end_at->format('Y-m-d\TH:i') : '') }}"
+    >
+    @error('end_at')
+        <p class="error">{{ $message }}</p>
+    @enderror
+</div>
+<div>
+    <label for="location">Lokasi</label>
+    <input
+        type="text"
+        id="location"
+        name="location"
+        value="{{ old('location', $activity->location ?? '') }}"
+    >
+    @error('location')
+        <p class="error">{{ $message }}</p>
+    @enderror
+</div>
+<div>
+    <label for="capacity">Kapasitas</label>
+    <input
+        type="number"
+        id="capacity"
+        name="capacity"
+        value="{{ old('capacity', $activity->capacity ?? '') }}"
+    >
+    @error('capacity')
         <p class="error">{{ $message }}</p>
     @enderror
 </div>

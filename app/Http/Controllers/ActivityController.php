@@ -17,16 +17,18 @@ class ActivityController extends Controller
 {
     public function index(Request $request): View
     {
-        $status = $request->query('status');
         $activities = Activity::query()
-            ->when(
-                in_array($status, ['Planned', 'Ongoing', 'Done'], true),
-                fn ($query) => $query->where('status', $status)
-            )
-            ->orderBy('activity_date')
-            ->get();
+            ->search($request->string('search')->trim()->toString())
+            ->ofCategory($request->integer('category_id'))
+            ->ofStatus($request->string('status')->toString())
+            ->sortByStart($request->string('sort')->toString())
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('activities.index', compact('activities', 'status'));
+        return view('activities.index', [
+            'activities' => $activities,
+            'categories' => $this->categories(),
+        ]);
     }
 
     public function show(Activity $activity): View
@@ -73,6 +75,30 @@ class ActivityController extends Controller
             ->with('success', 'Kegiatan berhasil diperbarui.');
     }
 
+    public function publish(Activity $activity, ActivityService $service): RedirectResponse
+    {
+        try {
+            $service->publish($activity);
+        } catch (DomainException $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
+        return redirect()->route('activities.show', $activity)
+            ->with('success', 'Kegiatan berhasil dipublikasikan.');
+    }
+
+    public function complete(Activity $activity, ActivityService $service): RedirectResponse
+    {
+        try {
+            $service->complete($activity);
+        } catch (DomainException $exception) {
+            return back()->with('error', $exception->getMessage());
+        }
+
+        return redirect()->route('activities.show', $activity)
+            ->with('success', 'Kegiatan berhasil diselesaikan.');
+    }
+    
     public function destroy(Activity $activity): RedirectResponse
     {
         $activity->delete();

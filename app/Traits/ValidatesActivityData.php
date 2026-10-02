@@ -18,8 +18,14 @@ trait ValidatesActivityData
             ],
             'title' => ['required', 'string', 'min:5', 'max:100'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'activity_date' => ['required', 'date'],
-            'status' => ['required', Rule::in(['Planned', 'Ongoing', 'Done'])],
+            'start_at' => ['nullable', 'date'],
+            'end_at' => [
+                'nullable',
+                'date',
+                Rule::when($this->filled('start_at'), 'after_or_equal:start_at'),
+            ],
+            'location' => ['nullable', 'string', 'max:100'],
+            'capacity' => ['nullable', 'integer', 'min:1', 'max:500'],
         ];
     }
 }
