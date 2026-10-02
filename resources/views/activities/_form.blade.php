@@ -1,4 +1,33 @@
 <div>
+    <label for="category_id">Kategori</label>
+    <select name="category_id" id="category_id">
+        <option value="">-- Pilih Kategori --</option>
+        @foreach ($categories as $category)
+            <option
+                value="{{ $category->id }}"
+                @selected((int) old('category_id', $activity->category_id ?? 0) === $category->id)
+            >
+                {{$category->name}}
+            </option>
+        @endforeach
+    </select>
+    @error('category_id')
+        <p class="error">{{ $message}}</p>
+    @enderror
+</div>
+<div>
+    <label for="code">Kode</label>
+    <input
+        type="text"
+        id="code"
+        name="code"
+        value="{{ old('code', $activity->code ?? '') }}"
+    >
+    @error('code')
+        <p class="error">{{ $message }}</p>
+    @enderror
+</div>
+<div>
     <label for="title">Judul</label>
     <input
         type="text"
@@ -26,18 +55,6 @@
         value="{{ old('activity_date', isset($activity) ? $activity->activity_date->format('Y-m-d') : '') }}"
     >
     @error('activity_date')
-        <p class="error">{{ $message }}</p>
-    @enderror
-</div>
-<div>
-    <label for="category">Kategori</label>
-    <input
-        type="text"
-        id="category"
-        name="category"
-        value="{{ old('category', $activity->category ?? '') }}"
-    >
-    @error('category')
         <p class="error">{{ $message }}</p>
     @enderror
 </div>

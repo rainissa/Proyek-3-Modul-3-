@@ -4,7 +4,8 @@
     <h1>{{ $activity->title }}</h1>
     <p>{{ $activity->description }}</p>
     <p>Tanggal: {{ $activity->activity_date->format('d M Y') }}</p>
-    <p>Kategori: {{ $activity->category }}</p>
+    <p>Kode: {{ $activity->code }}</p>
+    <p>Kategori: {{ $activity->category->name }}</p>
     <p>Status: {{ $activity->status }}</p>
     <a href="{{ route('activities.edit', $activity) }}">Ubah</a>
     <form method="POST" action="{{ route('activities.destroy', $activity) }}" onsubmit="return confirm('Hapus kegiatan ini?')">

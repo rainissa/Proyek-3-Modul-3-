@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use Illuminate\Database\Eloquent\Collection;
 use App\Http\Requests\StoreActivityRequest;
 use App\Http\Requests\UpdateActivityRequest;
 use App\Models\Activity;
@@ -34,7 +36,7 @@ class ActivityController extends Controller
 
     public function create(): View
     {
-        return view('activities.create');
+        return view('activities.create', ['categories' => $this->categories()]);
     }
 
     public function store(StoreActivityRequest $request, ActivityService $service): RedirectResponse
@@ -47,7 +49,10 @@ class ActivityController extends Controller
 
     public function edit(Activity $activity): View
     {
-        return view('activities.edit', compact('activity'));
+        return view('activities.edit', [
+        'activity' => $activity,
+        'categories' => $this->categories(),
+        ]);
     }
 
     public function update(
@@ -74,5 +79,8 @@ class ActivityController extends Controller
 
         return redirect()->route('activities.index')
             ->with('success', 'Kegiatan berhasil dihapus.');
+    }
+    private function categories(): Collection{
+        return Category::orderBy('name')->get();
     }
 }

@@ -21,6 +21,7 @@
             </h2>
             <p>{{ $activity->activity_date->format('d M Y') }}</p>
             <p>Status: {{ $activity->status }}</p>
+            <p>Kategori: {{ $activity->category->name }}</p>
         </article>
     @empty
         <p>Belum ada kegiatan.</p>
