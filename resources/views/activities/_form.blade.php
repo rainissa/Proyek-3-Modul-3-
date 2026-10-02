@@ -94,3 +94,25 @@
         <p class="error">{{ $message }}</p>
     @enderror
 </div>
+<div>
+    <label for="poster">Poster Kegiatan (Opsional)</label>
+    <input
+        type="file"
+        id="poster"
+        name="poster"
+        accept="image/jpeg,image/png,image/webp"
+    >
+    @error('poster')
+        <p class="error">{{ $message }}</p>
+    @enderror
+</div>
+@if (isset($activity) && $activity->poster_path)
+    <div>
+        <p>Poster saat ini:</p>
+        <img
+            src="{{ asset('storage/' . $activity->poster_path) }}"
+            alt="Poster {{ $activity->title }}"
+            width="200"
+        >
+    </div>
+@endif

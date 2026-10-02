@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 
 trait ValidatesActivityData
 {
@@ -26,6 +27,12 @@ trait ValidatesActivityData
             ],
             'location' => ['nullable', 'string', 'max:100'],
             'capacity' => ['nullable', 'integer', 'min:1', 'max:500'],
+            'poster' => [
+                'nullable',
+                File::image()
+                    ->types(['jpg', 'jpeg', 'png', 'webp'])
+                    ->max(2048),
+            ],
         ];
     }
 }

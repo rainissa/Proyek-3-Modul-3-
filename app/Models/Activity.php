@@ -20,7 +20,8 @@ class Activity extends Model
         'capacity',
         'status',
         'category_id',
-        'code'
+        'code',
+        'poster_path'
     ];
 
     protected function casts(): array

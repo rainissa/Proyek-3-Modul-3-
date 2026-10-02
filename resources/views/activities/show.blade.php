@@ -2,6 +2,16 @@
 
 @section('content')
     <h1>{{ $activity->title }}</h1>
+    @if ($activity->poster_path)
+        <div>
+            <h2>Poster Kegiatan</h2>
+            <img
+                src="{{ asset('storage/' . $activity->poster_path) }}"
+                alt="Poster {{ $activity->title }}"
+                style="max-width: 400px; height: auto;"
+            >
+        </div>
+    @endif
     @if (session('success'))
         <p class="success">{{ session('success') }}</p>
     @endif

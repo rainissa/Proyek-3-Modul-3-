@@ -4,19 +4,63 @@ namespace App\Services;
 
 use App\Models\Activity;
 use DomainException;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ActivityService
 {
     public function create(array $data): Activity
     {
+        $poster = $data['poster'] ?? null;
+        unset($data['poster']);
+
+        if ($poster instanceof UploadedFile) {
+            $path = $poster->store('posters', 'public');
+            if ($path === false) {
+                throw new \RuntimeException('Poster gagal disimpan.');
+            }
+            $data['poster_path'] = $path;
+        }
         $data['status'] = 'draft';
-        return Activity::create($data);
+        try {
+            return Activity::create($data);
+        } catch (\Throwable $exception) {
+            if (isset($path)) {
+                Storage::disk('public')->delete($path);
+            }
+            throw $exception;
+        }
     }
 
     public function update(Activity $activity, array $data): Activity
     {
-        $activity->update($data);
+        $poster = $data['poster'] ?? null;
+        unset($data['poster']);
+        $oldPosterPath = $activity->poster_path;
+        $newPosterPath = null;
+        if ($poster instanceof UploadedFile) {
+            $newPosterPath = $poster->store('posters', 'public');
+            if ($newPosterPath === false) {
+                throw new \RuntimeException('Poster gagal disimpan.');
+            }
+            $data['poster_path'] = $newPosterPath;
+        }
 
+        try {
+            $activity->update($data);
+        } catch (\Throwable $exception) {
+            if ($newPosterPath !== null) {
+                Storage::disk('public')->delete($newPosterPath);
+            }
+            throw $exception;
+        }
+        if (
+            $newPosterPath !== null &&
+            $oldPosterPath !== null &&
+            $oldPosterPath !== $newPosterPath
+        ) {
+            Storage::disk('public')->delete($oldPosterPath);
+        }
         return $activity->refresh();
     }
 
